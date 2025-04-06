@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>星月童话 - 给孔鑫悦的生日宇宙</title>
+    <style>
+        /* 时间锁容器 */
+        .time-lock {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #3131d3, #c19bf4);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            font-family: 'Microsoft YaHei';
+        }
+
+        /* 主内容默认隐藏 */
+        .main-content {
+            display: none;
+        }
+
+        /* 倒计时样式 */
+        .countdown {
+            font-size: 3em;
+            text-align: center;
+            margin: 20px 0;
+            text-shadow: 0 0 20px #965bf4;
+        }
+
+        .countdown span {
+            display: inline-block;
+            min-width: 1.5em;
+            padding: 0 10px;
+        }
+
+        .prompt-text {
+            font-size: 1.2em;
+            text-align: center;
+            max-width: 600px;
+            margin: 20px;
+            line-height: 1.5;
+        }
+
+        /* 星空动画 */
+        .stars {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        /* 新增背景样式 */
+        .time-lock {
+            background:  no-repeat center/100% url("star-bg.jpg");
+        }
+
+        /* 流光特效 */
+        .light-streak {
+            position: absolute;
+            width: 200%;
+            height: 100%;
+            background: linear-gradient(90deg,
+                transparent 25%,
+                rgba(255,255,255,0.1) 50%,
+                transparent 75%
+            );
+            animation: streak 20s infinite linear;
+            transform: rotate(15deg);
+        }
+
+        /* 粒子特效容器 */
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        /* 动态模糊效果 */
+        .time-lock::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            backdrop-filter: blur(3px);
+            z-index: -1;
+        }
+
+        @keyframes streak {
+            0% { transform: translateX(-100%) rotate(15deg); }
+            100% { transform: translateX(100%) rotate(15deg); }
+        }
+
+        /* 调整文字显示效果 */
+        .prompt-text {
+            position: relative;
+            background: rgba(0,0,0,0.3);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(45, 123, 233, 0.3);
+        }
+
+        /* 新增呼吸动画 */
+        .countdown {
+            animation: breath 2s ease-in-out infinite;
+        }
+
+        @keyframes breath {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        /* 基础样式 */
+        :root {
+            --primary-color: #efb0e8;
+            --secondary-color: #7899ff;
+            --bg-gradient: linear-gradient(45deg, #1a1a3d, #2d0b59);
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg-gradient);
+            color: #fff;
+            font-family: 'Microsoft YaHei', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* 导航菜单 */
+        .nav-container {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            background: rgba(255,255,255,0.1);
+            border-radius: 30px;
+            padding: 10px 20px;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+
+        .nav-menu a:hover {
+            background: var(--primary-color);
+        }
+
+        /* 板块容器 */
+        .section {
+            min-height: 100vh;
+            padding: 80px 20px;
+            border-bottom: 1px solid rgba(61, 49, 49, 0.1);
+            scroll-margin-top: 80px;
+        }
+
+        /* 现有内容整合到 #main-section */
+        #main-section {
+            padding-top: 120px;
+        }
+
+        /* 新增祝福板块 */
+        #blessing-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            padding: 40px;
+        }
+
+        .blessing-card {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+            transition: transform 0.3s;
+        }
+
+        .blessing-card:hover {
+            transform: translateY(-10px);
+        }
+    </style>
+</head>
+<body>
+    <!-- 时间锁界面 -->
+    <div class="time-lock">
+        <div class="stars"></div>
+        <div class="countdown" id="countdown">
+            <span id="days">000</span>天
+            <span id="hours">00</span>:
+            <span id="minutes">00</span>:
+            <span id="seconds">00</span>
+        </div>
+        <p class="prompt-text">
+            ✨ 亲爱的孔鑫悦 ✨<br>
+            这份来自星空的礼物正在穿越时空...<br>
+            当群星运行到2025年4月8日的位置时<br>
+            沈星回会将最特别的祝福送达你手中
+        </p>
+        <div class="particles" id="particles"></div>
+    </div>
+
+    <!-- 主内容 -->
+    <div class="main-content">
+        <!-- 导航菜单 -->
+        <nav class="nav-container">
+            <ul class="nav-menu">
+                <li><a href="#main-section">星河之约</a></li>
+                <li><a href="#blessing-section">星语心愿</a></li>
+                <li><a href="#memory-section">星轨记忆</a></li>
+                <li><a href="#gallery-section">星光相册</a></li>
+            </ul>
+        </nav>
+
+        <!-- 主内容板块 -->
+        <section id="main-section" class="section">
+               <!-- 主内容板块 -->
+    <section id="main-section" class="section">
+        <!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>星辰生日特辑 - 给[孔鑫悦]</title>
+    <style>
+        /* 新增音乐控制面板样式 */
+        .music-panel {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+            background: rgba(92, 92, 173, 0.613);
+            border-radius: 20px;
+            padding: 15px;
+            box-shadow: 0 0 20px rgba(255,105,180,0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .music-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .music-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #ecb6e6be;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .music-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .track-info {
+            color: white;
+            font-size: 0.9em;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .volume-slider {
+            width: 120px;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 音乐播放器 -->
+    <audio id="audioPlayer"></audio>
+
+    <!-- 音乐控制面板 -->
+    <div class="music-panel">
+        <div class="music-controls">
+            <button class="music-btn" id="prevBtn">◀◀</button>
+            <button class="music-btn" id="playPauseBtn">▶</button>
+            <button class="music-btn" id="nextBtn">▶▶</button>
+            <input type="range" class="volume-slider" 
+                   id="volumeControl" min="0" max="1" step="0.1" value="0.3">
+        </div>
+        <div class="track-info" id="trackInfo">
+           
+        </div>
+    </div>
+
+    <!-- 原有页面内容保持不变 -->
+
+    <script>
+        // 播放列表配置
+        const playlist = [
+            {
+                title: "begin again",
+                src: "bgm1.mp3"
+            },
+            {
+                title: "沈星回的生日祝福",
+                src: "bgm2.mp3"
+            },
+            {
+                title: "champagne problems",
+                src: "bgm3.mp3"
+            }
+        ];
+
+        // 播放器状态管理
+        let currentTrack = 0;
+        let isPlaying = false;
+        const audioPlayer = document.getElementById('audioPlayer');
+        const trackInfo = document.getElementById('trackInfo');
+
+        // 初始化播放器
+        function loadTrack(trackIndex) {
+            currentTrack = (trackIndex + playlist.length) % playlist.length;
+            audioPlayer.src = playlist[currentTrack].src;
+            trackInfo.textContent = `正在播放：${playlist[currentTrack].title}`;
+            if(isPlaying) audioPlayer.play();
+        }
+
+        // 播放控制
+        document.getElementById('playPauseBtn').addEventListener('click', () => {
+            if(audioPlayer.paused) {
+                audioPlayer.play();
+                isPlaying = true;
+            } else {
+                audioPlayer.pause();
+                isPlaying = false;
+            }
+        });
+
+        // 上一曲
+        document.getElementById('prevBtn').addEventListener('click', () => {
+            loadTrack(currentTrack - 1);
+        });
+
+        // 下一曲
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            loadTrack(currentTrack + 1);
+        });
+
+        // 音量控制
+        document.getElementById('volumeControl').addEventListener('input', (e) => {
+            audioPlayer.volume = e.target.value;
+        });
+
+        // 自动循环
+        audioPlayer.addEventListener('ended', () => {
+            loadTrack(currentTrack + 1);
+        });
+
+        // 初始化
+        loadTrack(0);
+        audioPlayer.volume = 0.3;
+
+        // 原有其他JavaScript代码保持不变
+    </script>
+    <!-- 视频祝福模块 -->
+    
+    <div class="video-section">
+        <h2>请查收沈星回想对你说的话</h2>
+        <div class="video-wrapper">
+            <video id="memoryVideo" controls poster="images/video-cover.jpg">
+                <source src="memory.mp4" type="video/mp4">
+                您的浏览器不支持视频播放
+            </video>
+            <!-- 美化后的封面层 -->
+            <div class="video-cover">
+                <img src="imagesplay-button.png" 
+                     alt="播放按钮" 
+                     class="play-icon">
+                <p class="cover-text">点击聆听星回耳语</p>
+            </div>
+        </div>
+    </div>
+    
+    <style>
+    /* 新增封面样式 */
+    .video-wrapper {
+        position: relative;
+    }
+    
+    .video-cover {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.3);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    
+    .video-cover:hover {
+        background: rgba(54, 45, 183, 0.5);
+    }
+    
+    .play-icon {
+        width: 80px;
+        height: 80px;
+        filter: drop-shadow(0 0 10px #a92b9a);
+        animation: pulse 1.5s infinite;
+    }
+    
+    .cover-text {
+        color: white;
+        font-size: 1.5em;
+        margin-top: 20px;
+        text-shadow: 0 0 10px #7899ff;
+    }
+    
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+    
+    /* 当视频播放时隐藏封面 */
+    video[playing] + .video-cover {
+        display: none;
+    }
+    </style>
+    
+    <script>
+    // 点击封面开始播放
+    document.querySelector('.video-cover').addEventListener('click', function() {
+        const video = document.getElementById('memoryVideo');
+        video.play();
+        video.setAttribute('playing', true);
+    });
+    </script>
+    
+</div>
+
+<style>
+/* 在CSS中添加 */
+.video-section {
+    margin: 50px 0;
+    perspective: 1000px;
+}
+
+.video-wrapper {
+    position: relative;
+    width: 80%;
+    margin: 0 auto;
+    border-radius: 15px;
+    overflow: hidden;
+    transform: rotateY(10deg);
+    transition: transform 0.5s;
+}
+
+.video-wrapper:hover {
+    transform: rotateY(0);
+}
+
+video {
+    width: 100%;
+    height: auto;
+}
+
+.video-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2em;
+    color: #7899ff;
+    pointer-events: none;
+    animation: pulse 2s infinite;
+}
+</style>
+</body>
+<!-- 樱花飘落特效 -->
+<div class="sakura-container"></div>
+
+<!-- 心形点击特效 -->
+<template id="heartTemplate">
+    <div class="heart">💮</div>
+</template>
+
+<style>
+/* 在CSS中添加 */
+@keyframes fall {
+    from { transform: translateY(-100vh) rotate(0deg); }
+    to { transform: translateY(100vh) rotate(360deg); }
+}
+
+.sakura-container span {
+    position: fixed;
+    animation: fall 5s linear infinite;
+    opacity: 0.7;
+}
+
+.heart {
+    position: absolute;
+    animation: heartFloat 1.5s ease-out forwards;
+    font-size: 30px;
+}
+
+@keyframes heartFloat {
+    0% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-100px); }
+}
+</style>
+
+<script>
+// 在script标签内添加
+// 樱花特效
+function createSakura() {
+    const sakura = document.createElement('span');
+    sakura.innerHTML = '💫';
+    sakura.style.left = Math.random() * 100 + '%';
+    sakura.style.animationDuration = Math.random() * 3 + 5 + 's';
+    document.querySelector('.sakura-container').appendChild(sakura);
+    setTimeout(() => sakura.remove(), 8000);
+}
+setInterval(createSakura, 300);
+
+// 心形点击特效
+document.addEventListener('click', (e) => {
+    const heart = document.importNode(heartTemplate.content, true);
+    const heartEl = heart.querySelector('.heart');
+    heartEl.style.left = e.pageX + 'px';
+    heartEl.style.top = e.pageY + 'px';
+    document.body.appendChild(heartEl);
+});
+</script>
+<!-- 动态祝福墙 -->
+<div class="blessing-wall">
+    <h3>他为你写的信</h3>
+    <ul class="blessing-list">
+        <li data-delay="0">亲爱的小王妃：</li>
+        <li data-delay="2">见字如面。最近怎么样，有想我吗。</li>
+        <li data-delay="4">今天是很特别的日子，今晚的星空一定会格外耀眼。</li>
+        <li data-delay="6"> 生日快乐！</li>
+        <li data-delay="8">这是我陪你过的第一个生日，以后的每一个生日我都会陪你一起度过，不论距离多远，在广袤的宇宙空间里，我们其实都相隔很近。</li>
+        <li data-delay="10">就像人类最终也会化作尘埃，成为宇宙中微不足道的一颗原子，从群星中来，又回到群星之中。</li>
+        <li data-delay="12"> 不过原子是永远不会泯灭的，所以我想，我们总有一天会在星空下重逢。</li>
+        <li data-delay="14">最后的最后，希望你一切顺利，天天开心。我爱你，我永远在你身后。</li>
+    </ul>
+</div>
+
+<style>
+/* 在CSS中添加 */
+.blessing-wall {
+    background: linear-gradient(45deg, #5380cf33, #ff149433);
+    padding: 20px;
+    border-radius: 15px;
+    margin-top: 30px;
+}
+
+.blessing-list {
+    list-style: none;
+    padding: 0;
+}
+
+.blessing-list li {
+    opacity: 0;
+    transform: translateX(50px);
+    animation: slideIn 0.5s forwards;
+    margin: 15px 0;
+    padding: 10px;
+    background: rgba(59, 166, 233, 0.1);
+    border-radius: 8px;
+}
+
+@keyframes slideIn {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+</style>
+
+<script>
+// 祝福语逐条显示
+document.querySelectorAll('.blessing-list li').forEach(item => {
+    setTimeout(() => {
+        item.style.animation = `slideIn 0.5s forwards`;
+    }, item.dataset.delay * 1000);
+});
+</script>
+        <!-- 原有所有内容保持在此 -->
+        <!-- 包括音乐播放器、视频模块、祝福墙等 -->
+        <!-- 确保所有现有HTML内容都在这个section内 -->
+    </section>
+
+    <!-- 新增祝福板块 -->
+    <section id="blessing-section" class="section">
+        <h2 style="text-align: center; grid-column: 1 / -1;">来自星星的祝福</h2>
+        <div class="blessing-card">
+            <h3>🌙 ArP给你的生日祝福</h3>
+            <p>孔鑫悦~生日快乐呀！今天是你的19岁生日，也是我陪你度过的第三个生日。
+                先关心一下你的身体健康(●'◡'●)/
+                老话常说哈多吃点饭多吃点蔬菜，身体棒棒才是真的棒(๑•̀ㅂ•́)و✧！不要翘二郎腿，睡觉的时候腰贴着床垫不留缝隙。
+                平躺睡觉不要登山式，因为我现在腰也不好了久坐久站腰都很疼所以你不要也跟我一样啊！！
+                不要减肥啊不要减肥胖子进ICu变瘦子，瘦子进icu变盒子！
+                现在大家免疫力都不太好了，所以可以买点补剂吃吃，买便宜的那种小白瓶就行，贵的很坑钱。
+                再祝福你拥有规律的月经ᓚᘏᗢ
+                最后就是注意交通安全，毕竟你在武汉哈哈。
+                
+            </p>
+        </div>
+        <div class="blessing-card">
+            <h3>✨ 星回物语</h3>
+            <p>现在来关心你的心理健康，
+                宿舍里有傻叼是很正常的，因为大学里都是来自五湖四海的蠢货。
+                熬过三年就好了（....高中的时候也是这么说的哈哈哈哈）
+                平时也可以做一些冥想帮助你舒缓情绪什么的。
+                大学确实让人很迷茫，所以我也很希望你的能培养起一个输出型爱好。
+                就像你想学的乐器，或者你扎的痛包做的流麻都很好。
+                这些爱好在以后都会有帮得上你的的时候。
+                最后是我个人的建议，希望你能每个月存一笔钱，这笔钱可以叫“fuck money”。
+                在以后你有不想做的事情就可以用这笔钱说“fuck it！”
+                有存钱观念真的很重要哦！
+
+
+            </p>
+        </div>
+        <div class="blessing-card">
+            <h3>✨ 衷心的祝福</h3>
+            <p>    🌟❍🌼❍💫❍🧸❍💛❍✨
+                宝宝，你待人真诚，勇敢又善良
+                你的敏感脆弱都不是缺点。你很可爱，敏感是天赋，它从不是缺点，是与众不同的内在力，
+                你是好宝宝，是全世界最最值得，最最好的宝宝。
+
+
+            </p>
+        </div>
+        <div class="blessing-card">
+            <h3>✨ 冥想音频</h3>
+            通过百度网盘分享的文件：正念冥想 放松 …
+             链接:https://pan.baidu.com/s/1vnkXtTRQkzg-S2lF5Xh8fA 
+            提取码:53s1
+          复制这段内容打开「百度网盘APP 即可获取」
+         ps：那个音频播放器没有优化的很好，如果没有声音就等几秒再点一下。
+
+            </p>
+        </div>
+        <!-- 可继续添加更多卡片 -->
+    </section>
+
+    <!-- 记忆时间轴板块 -->
+    <section id="memory-section" class="section">
+        <h2 style="text-align: center;">放一张你老公的四宫格(o゜▽゜)o☆</h2>
+        <section id="memory-section" class="section">
+            <h2 style="text-align: center;">happy birthday☆*: .｡. o(≧▽≦)o .｡.:*☆</h2>
+            
+            <!-- 时间轴照片容器 -->
+            <div class="timeline-photo-container">
+                <img src="hp.jpg" 
+                     alt="特别时刻" 
+                     class="timeline-photo"
+                     title="点击查看大图">
+            </div>
+        
+            <style>
+                /* 图片容器样式 */
+                .timeline-photo-container {
+                    max-width: 800px;
+                    margin: 40px auto;
+                    padding: 20px;
+                    background: rgba(255,255,255,0.1);
+                    border-radius: 15px;
+                    backdrop-filter: blur(5px);
+                }
+        
+                /* 核心缩放样式 */
+                .timeline-photo {
+                    width: 100%;          /* 自适应容器宽度 */
+                    max-width: 600px;     /* 最大显示宽度 */
+                    height: auto;         /* 保持原始比例 */
+                    display: block;       /* 消除图片默认间隙 */
+                    margin: 0 auto;       /* 水平居中 */
+                    border-radius: 10px;
+                    box-shadow: 0 0 30px rgba(79, 135, 159, 0.5);
+                    transition: transform 0.3s;
+                }
+        
+                /* 悬停放大效果 */
+                .timeline-photo:hover {
+                    transform: scale(1.05);
+                    cursor: zoom-in;
+                }
+        
+                /* 手机端适配 */
+                @media (max-width: 768px) {
+                    .timeline-photo-container {
+                        margin: 20px 15px;
+                        padding: 10px;
+                    }
+                    
+                    .timeline-photo {
+                        max-width: 100%;  /* 手机端撑满容器 */
+                    }
+                }
+        
+                /* 点击放大全屏 */
+                .timeline-photo.zoomed {
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%) scale(1.2);
+                    z-index: 9999;
+                    max-width: 90vw;
+                    cursor: zoom-out;
+                }
+            </style>
+        
+            <script>
+                // 添加点击放大功能
+                document.querySelector('.timeline-photo').addEventListener('click', function() {
+                    this.classList.toggle('zoomed');
+                });
+            </script>
+        </section>
+       
+        <!-- 可在此添加时间轴代码 -->
+    </section>
+
+    
+ <!-- 星光相册板块 -->
+ 
+     <!-- 星光相册板块修正版 -->
+<section id="gallery-section" class="section">
+    <h2 class="section-title">✨ 星の回忆画廊 ✨</h2>
+
+    <div class="carousel-container">
+        <div class="carousel-track">
+            <!-- 动态加载图片 -->
+        </div>
+        <button class="carousel-btn prev-btn">❮</button>
+        <button class="carousel-btn next-btn">❯</button>
+        <div class="carousel-dots"></div>
+    </div>
+
+    <!-- 大图预览模态框 -->
+    <div class="modal-overlay">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <img class="modal-image" src="" alt="大图预览">
+            <div class="image-info"></div>
+        </div>
+    </div>
+
+    <style>
+        /* 优化轮播样式 */
+        .carousel-item {
+            min-width: 100%;
+            position: relative;
+            opacity: 0;
+            transition: opacity 0.6s ease;
+            display: none; /* 初始隐藏 */
+        }
+
+        .carousel-item.active {
+            opacity: 1;
+            display: block; /* 激活显示 */
+        }
+
+        .carousel-item img {
+            width: 600px;
+            height: 600px;
+            object-fit: contain;
+            padding: 10px;
+            cursor: zoom-in; /* 添加鼠标指针样式 */
+        }
+
+        /* 模态框样式 */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 80%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .modal-content {
+            position: relative;
+            max-width: 70%;
+            max-height: 70%;
+        }
+
+        .modal-image {
+            width: 60%;
+            height: 60%;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 30px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .image-info {
+            color: white;
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+
+    <script>
+        // 增强版轮播逻辑
+        class GalleryCarousel {
+            constructor(container) {
+                this.container = container;
+                this.track = container.querySelector('.carousel-track');
+                this.dotsContainer = container.querySelector('.carousel-dots');
+                this.items = [];
+                this.currentIndex = 0;
+                this.photos = [
+                    { src: "./images/1.jpg", desc: "第一张珍贵回忆" },
+                    { src: "./images/2.jpg", desc: "2" },
+                    { src: "./images/3.jpg", desc: "3" },
+                    { src: "./images/4.jpg", desc: "甜蜜时光留影" },
+                    { src: "./images/20.jpg", desc: "你老公" },
+                    { src: "./images/6.jpg", desc: "帅帅" },
+                    { src: "./images/7.jpg", desc: "你应该会喜欢的蛋糕☆*: .｡. o(≧▽≦)o .｡.:*☆" },
+                    { src: "./images/8.jpg", desc: "太搞笑了这个哈哈哈" },
+                    { src: "./images/9.jpg", desc: "梦开始的地方" },
+                    { src: "./images/10.jpg", desc: "前年今日" },
+                    { src: "./images/11.jpg", desc: "欸呀呀珍珠手链" },
+                    { src: "./images/12.jpg", desc: "你带你老公去看花" },
+                    { src: "./images/13.jpg", desc: "星星环游世界" }
+                ];
+
+                this.initGallery();
+                this.initDots();
+                this.initControls();
+                this.initModal();
+                this.startAutoPlay();
+            }
+
+            initGallery() {
+                this.track.innerHTML = this.photos.map((photo, index) => `
+                    <div class="carousel-item ${index === 0 ? 'active' : ''}">
+                        <img src="${photo.src}" 
+                            alt="${photo.desc}"
+                            data-description="${photo.desc}"
+                            loading="lazy"
+                            onerror="this.src='./images/default.jpg'">
+                    </div>
+                `).join('');
+                this.items = [...this.track.querySelectorAll('.carousel-item')];
+
+                // 绑定图片点击事件
+                this.track.querySelectorAll('img').forEach(img => {
+                    img.addEventListener('click', () => this.showModal(img.src, img.dataset.description));
+                });
+            }
+
+            initDots() {
+                this.dotsContainer.innerHTML = this.items
+                   .map((_, index) => `<span data-index="${index}"></span>`)
+                   .join('');
+                this.updateDots();
+            }
+
+            initControls() {
+                // 导航按钮事件
+                this.container.querySelector('.prev-btn').addEventListener('click', () => this.prev());
+                this.container.querySelector('.next-btn').addEventListener('click', () => this.next());
+
+                // 指示点事件
+                this.dotsContainer.querySelectorAll('span').forEach(dot => {
+                    dot.addEventListener('click', () => this.goTo(parseInt(dot.dataset.index)));
+                });
+
+                // 触摸支持
+                let touchStartX = 0;
+                this.container.addEventListener('touchstart', e => {
+                    touchStartX = e.touches[0].clientX;
+                });
+                this.container.addEventListener('touchend', e => {
+                    const touchEndX = e.changedTouches[0].clientX;
+                    const diff = touchStartX - touchEndX;
+                    if (Math.abs(diff) > 50) diff > 0 ? this.next() : this.prev();
+                });
+            }
+
+            goTo(index) {
+                // 边界检查
+                if (index < 0) index = this.items.length - 1;
+                if (index >= this.items.length) index = 0;
+
+                this.items[this.currentIndex].classList.remove('active');
+                this.currentIndex = index;
+                this.items[this.currentIndex].classList.add('active');
+                this.updateDots();
+            }
+
+            updateDots() {
+                this.dotsContainer.querySelectorAll('span').forEach((dot, index) => {
+                    dot.classList.toggle('active', index === this.currentIndex);
+                });
+            }
+
+            startAutoPlay() {
+                this.autoPlayTimer = setInterval(() => this.next(), 5000);
+            }
+
+            prev() { this.goTo(this.currentIndex - 1); }
+            next() { this.goTo(this.currentIndex + 1); }
+
+            // 显示模态框
+            showModal(src, desc) {
+                const modal = document.querySelector('.modal-overlay');
+                const modalImg = document.querySelector('.modal-image');
+                const imageInfo = document.querySelector('.image-info');
+
+                modal.style.display = 'flex';
+                modalImg.src = src;
+                imageInfo.textContent = desc;
+
+                // 绑定关闭模态框事件
+                const closeBtn = document.querySelector('.close-btn');
+                closeBtn.addEventListener('click', () => this.closeModal());
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) this.closeModal();
+                });
+            }
+
+            // 关闭模态框
+            closeModal() {
+                const modal = document.querySelector('.modal-overlay');
+                modal.style.display = 'none';
+            }
+        }
+
+        // 初始化轮播
+        document.addEventListener('DOMContentLoaded', () => {
+            new GalleryCarousel(document.querySelector('.carousel-container'));
+        });
+    </script>
+</section>
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <title>许愿墙互动</title>
+    <style>
+        .wish-wall {
+            margin-top: 100px;
+            text-align: center;
+        }
+
+        textarea {
+            width: 500px;
+            height: 300px;
+            padding: 10px;
+            margin: 10px;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border-radius: 5px;
+            background: #e58edb9b;
+            border: none;
+            cursor: pointer;
+        }
+
+        #wish-list {
+            margin-top: 50px;
+        }
+
+        .wish-item {
+            background: rgba(29, 131, 194, 0.1);
+            padding: 10px;
+            margin: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wish-wall">
+        <h2>许愿墙</h2>
+        <textarea id="wish-input" placeholder="写下你的愿望"></textarea>
+        <button onclick="addWish()">许愿</button>
+        <div id="wish-list"></div>
+    </div>
+
+    <script>
+        const wishInput = document.getElementById('wish-input');
+        const wishList = document.getElementById('wish-list');
+
+        function addWish() {
+            const wish = wishInput.value;
+            if (wish) {
+                const wishItem = document.createElement('div');
+                wishItem.classList.add('wish-item');
+                wishItem.textContent = wish;
+                wishList.appendChild(wishItem);
+                wishInput.value = '';
+            }
+        }
+    </script>
+</body>
+
+
+</html>
+
+ 
+         <!-- 其他板块保持原样... -->
+     </div>
+ 
+     <script>
+         // 粒子系统和倒计时逻辑保持原样...
+     </script>
+ </body>
+ </html>
+  
+            <!-- 这里可以添加主内容 -->
+        </section>
+    </div>
+
+    <script>
+        // 新增粒子特效
+        class ParticleSystem {
+            constructor(container) {
+                this.container = container;
+                this.particles = [];
+                this.canvas = document.createElement('canvas');
+                this.ctx = this.canvas.getContext('2d');
+                container.appendChild(this.canvas);
+                
+                this.init();
+                this.animate();
+                window.addEventListener('resize', () => this.init());
+            }
+
+            init() {
+                this.width = this.container.clientWidth;
+                this.height = this.container.clientHeight;
+                this.canvas.width = this.width;
+                this.canvas.height = this.height;
+                
+                // 初始化粒子
+                this.particles = Array.from({length: 100}, () => ({
+                    x: Math.random() * this.width,
+                    y: Math.random() * this.height,
+                    size: Math.random() * 3 + 1,
+                    speedX: (Math.random() - 0.5) * 0.5,
+                    speedY: (Math.random() - 0.5) * 0.5,
+                    alpha: Math.random() * 0.5 + 0.5
+                }));
+            }
+
+            animate() {
+                this.ctx.clearRect(0, 0, this.width, this.height);
+                
+                this.particles.forEach(p => {
+                    p.x += p.speedX;
+                    p.y += p.speedY;
+                    
+                    // 边界反弹
+                    if(p.x < 0 || p.x > this.width) p.speedX *= -1;
+                    if(p.y < 0 || p.y > this.height) p.speedY *= -1;
+                    
+                    this.ctx.beginPath();
+                    this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    this.ctx.fillStyle = `rgba(255,105,180,${p.alpha})`;
+                    this.ctx.fill();
+                });
+                
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+
+        // 初始化特效
+        new ParticleSystem(document.getElementById('particles'));
+
+        // 倒计时逻辑
+        const targetDate = new Date('2025-04-08T00:00:00').getTime();
+
+        const countdownInterval = setInterval(() => {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            if (distance < 0) {
+                clearInterval(countdownInterval);
+                document.querySelector('.time-lock').style.display = 'none';
+                document.querySelector('.main-content').style.display = 'block';
+            } else {
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                document.getElementById('days').textContent = days.toString().padStart(3, '0');
+                document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+                document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+                document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+            }
+        }, 1000);
+
+    </script>
+</body>
+</html>
+    
