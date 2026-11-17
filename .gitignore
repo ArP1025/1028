@@ -1,0 +1,17 @@
+# Trae 内部目录
+.trae/
+
+# Python
+__pycache__/
+*.pyc
+
+# 数据库和生成的文件
+*.db
+
+# 编辑器
+.vscode/
+.idea/
+
+# 系统文件
+Thumbs.db
+desktop.ini
